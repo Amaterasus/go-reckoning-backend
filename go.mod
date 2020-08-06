@@ -1,4 +1,4 @@
-module github.com/Amaterasus/reckoning-backend
+module github.com/Amaterasus/go-reckoning-backend
 
 go 1.14
 

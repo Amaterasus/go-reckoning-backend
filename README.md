@@ -1,0 +1,1 @@
+While learning Go I am also rebuilding the backend of my application reckoning in go which is this project.

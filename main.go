@@ -6,8 +6,8 @@ import (
 	"log"
 
 	"github.com/joho/godotenv"	
-	"github.com/Amaterasus/reckoning-backend/api/models"
-	"github.com/Amaterasus/reckoning-backend/api/router"
+	"github.com/Amaterasus/go-reckoning-backend/api/models"
+	"github.com/Amaterasus/go-reckoning-backend/api/router"
 )
 
 func main() {

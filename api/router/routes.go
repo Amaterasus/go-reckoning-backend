@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Amaterasus/reckoning-backend/api/controllers"
+	"github.com/Amaterasus/go-reckoning-backend/api/controllers"
 
 	"github.com/gorilla/mux"
 )

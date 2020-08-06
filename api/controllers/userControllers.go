@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/Amaterasus/reckoning-backend/api/models"
+	"github.com/Amaterasus/go-reckoning-backend/api/models"
 
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
