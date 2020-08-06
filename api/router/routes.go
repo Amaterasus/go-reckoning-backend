@@ -6,6 +6,7 @@ import (
 
 	"github.com/Amaterasus/go-reckoning-backend/api/controllers"
 
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )
 
@@ -18,6 +19,9 @@ func HandleRequests(port string) {
 	myRouter.HandleFunc("/users", controllers.NewUser).Methods("POST")
 	myRouter.HandleFunc("/users/{id}", controllers.UpdateUser).Methods("PATCH")
 	myRouter.HandleFunc("/users/{id}", controllers.DeleteUser).Methods("DELETE")
+
+
+	cors := handlers.AllowedOrigins([]string{"https://reckoning.netlify.app", "*"})
 	
-	log.Fatal(http.ListenAndServe(":" + port, myRouter))
+	log.Fatal(http.ListenAndServe(":" + port, handlers.CORS(cors)(myRouter)))
 }
