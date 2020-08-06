@@ -8,6 +8,8 @@ import (
 
 	"github.com/Amaterasus/go-reckoning-backend/api/models"
 
+	"golang.org/x/crypto/bcrypt"
+
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
 	// This is required for using postgres with gorm
@@ -58,7 +60,7 @@ func ShowUser(w http.ResponseWriter, r *http.Request) {
 
 // NewUser will create a new user in the database and return a JSON response of that user
 func NewUser(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("new user endpoint hit")
+	fmt.Println("New user endpoint hit")
 	
 	db, err := gorm.Open("postgres", os.Getenv("DATABASE_URL"))
 
@@ -71,8 +73,15 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 
 	name := r.FormValue("name")
 	email := r.FormValue("email")
+	password := r.FormValue("password")
 
-	user := db.Create(&models.User{Username: name, Email: email})
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), 12)
+
+	if err != nil {
+		panic(err)
+	}
+
+	user := db.Create(&models.User{Username: name, Email: email, HashedPassword: string(hashedPassword)})
 
 	fmt.Println("New user added to DataBase")
 

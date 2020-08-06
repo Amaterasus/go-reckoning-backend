@@ -14,6 +14,7 @@ type User struct {
 	gorm.Model
 	Username string
 	Email string
+	HashedPassword string
 }
 
 // InitialUserMigration will use GORM to migrate the tables in the database.
