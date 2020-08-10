@@ -20,6 +20,8 @@ func HandleRequests(port string) {
 	myRouter.HandleFunc("/users/{id}", controllers.UpdateUser).Methods("PATCH")
 	myRouter.HandleFunc("/users/{id}", controllers.DeleteUser).Methods("DELETE")
 
+	myRouter.HandleFunc("/login", controllers.Login).Methods("POST")
+
 
 	cors := handlers.AllowedOrigins([]string{"https://reckoning.netlify.app", "*"})
 	

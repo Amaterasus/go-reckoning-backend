@@ -71,7 +71,7 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 
 	defer db.Close()
 
-	name := r.FormValue("name")
+	username := r.FormValue("username")
 	email := r.FormValue("email")
 	password := r.FormValue("password")
 
@@ -81,7 +81,7 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 
-	user := db.Create(&models.User{Username: name, Email: email, HashedPassword: string(hashedPassword)})
+	user := db.Create(&models.User{Username: username, Email: email, HashedPassword: string(hashedPassword)})
 
 	fmt.Println("New user added to DataBase")
 
@@ -145,4 +145,38 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 	m := make(map[string]string)
     m["Message"] = "User Deleted!"
     json.NewEncoder(w).Encode(m)
+}
+
+// Login will varify the username and password and eventually should respond with a JWT for future verification
+func Login(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Login endpoint hit")
+	
+	db, err := gorm.Open("postgres", os.Getenv("DATABASE_URL"))
+
+	if err != nil {
+		fmt.Println(err.Error())
+		panic("Failed to connect to DataBase")
+	}
+
+	defer db.Close()
+
+	username := r.FormValue("username")
+	password := r.FormValue("password")
+
+	var user models.User
+
+	db.Where("Username = ?", username).Find(&user)
+
+
+	err = bcrypt.CompareHashAndPassword([]byte(user.HashedPassword), []byte(password))
+
+	if err != nil {
+		m := make(map[string]string)
+		m["Message"] = "Username and password do not match"
+		json.NewEncoder(w).Encode(m)
+	} else {
+		json.NewEncoder(w).Encode(user)
+
+	}
+
 }
