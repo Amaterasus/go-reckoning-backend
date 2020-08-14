@@ -49,3 +49,21 @@ func (user *User) GetAllUsers() *[]User {
 
 	return &users
 }
+
+// FindUserByID will be given an id and will find the user based upon it
+func (u *User) FindUserByID(id uint64) *User {
+	db, err := gorm.Open("postgres", os.Getenv("DATABASE_URL"))
+
+	if err != nil {
+		fmt.Println(err.Error())
+		panic("Failed to connect to DataBase")
+	}
+
+	defer db.Close()
+
+	user := User{}
+
+	db.First(&user, id)
+
+	return &user
+}

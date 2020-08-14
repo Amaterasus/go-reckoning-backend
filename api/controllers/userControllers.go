@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"encoding/json"
 	"net/http"
 
@@ -31,23 +32,16 @@ func AllUsers(w http.ResponseWriter, r *http.Request) {
 func ShowUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Show user endpoint hit")
 
-	db, err := gorm.Open("postgres", os.Getenv("DATABASE_URL"))
-
-	if err != nil {
-		fmt.Println(err.Error())
-		panic("Failed to connect to DataBase")
-	}
-
-	defer db.Close()
-
 	vars := mux.Vars(r)
 
-	id := vars["id"]
+	id, _ := strconv.ParseUint(vars["id"], 10, 32)
+
+
 	var user models.User
 
-	db.First(&user, id)
+	foundUser := user.FindUserByID(id)
 
-	json.NewEncoder(w).Encode(user)
+	json.NewEncoder(w).Encode(foundUser)
 }
 
 // NewUser will create a new user in the database and return a JSON response of that user
