@@ -12,9 +12,9 @@ import (
 // User is the structure of the class being used for the database
 type User struct {
 	gorm.Model
-	Username string 
-	Email string 
-	HashedPassword string 
+	Username string `json:"username"`
+	Email string `json:"email"`
+	HashedPassword string `json:"-"`
 }
 
 // InitialUserMigration will use GORM to migrate the tables in the database.
