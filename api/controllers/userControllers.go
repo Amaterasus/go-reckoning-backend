@@ -20,18 +20,10 @@ import (
 func AllUsers(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("All users endpoint hit")
 	
-	db, err := gorm.Open("postgres", os.Getenv("DATABASE_URL"))
+	user := models.User{}
 
-	if err != nil {
-		fmt.Println(err.Error())
-		panic("Failed to connect to DataBase")
-	}
+	users := user.GetAllUsers()
 
-	defer db.Close()
-
-	var users []models.User
-
-	db.Find(&users)
 	json.NewEncoder(w).Encode(users)
 }
 
