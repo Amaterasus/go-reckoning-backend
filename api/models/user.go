@@ -104,7 +104,7 @@ func (u *User) Create(username, email, password string) interface{} {
 	return user.Value
 }
 
-func (u *User) Update(id, email string) *User {
+func (u *User) Update(id, email string) {
 	db, err := gorm.Open("postgres", os.Getenv("DATABASE_URL"))
 
 	if err != nil {
@@ -124,7 +124,6 @@ func (u *User) Update(id, email string) *User {
 
 	fmt.Println("User successfully updated")
 
-	return &user
 
 }
 

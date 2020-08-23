@@ -32,7 +32,7 @@ func ShowUser(w http.ResponseWriter, r *http.Request) {
 
 	id, _ := strconv.ParseUint(vars["id"], 10, 32)
 
-	var user models.User
+	user := models.User{}
 
 	user.FindUserByID(id)
 
@@ -68,9 +68,9 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 
 	user := &models.User{}
 
-	updatedUser := user.Update(id, email)
+	user.Update(id, email)
 
-	json.NewEncoder(w).Encode(updatedUser)
+	json.NewEncoder(w).Encode(user)
 }
 
 // DeleteUser will find a user based on their ID and delete them from the database
