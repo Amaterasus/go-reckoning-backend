@@ -2,17 +2,13 @@ package controllers
 
 import (
 	"fmt"
-	"os"
 	"strconv"
 	"encoding/json"
 	"net/http"
 
 	"github.com/Amaterasus/go-reckoning-backend/api/models"
 
-	"golang.org/x/crypto/bcrypt"
-
 	"github.com/gorilla/mux"
-	"github.com/jinzhu/gorm"
 	// This is required for using postgres with gorm
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
@@ -97,32 +93,16 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 func Login(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Login endpoint hit")
 	
-	db, err := gorm.Open("postgres", os.Getenv("DATABASE_URL"))
-
-	if err != nil {
-		fmt.Println(err.Error())
-		panic("Failed to connect to DataBase")
-	}
-
-	defer db.Close()
-
 	username := r.FormValue("username")
 	password := r.FormValue("password")
 
 	var user models.User
 
-	db.Where("Username = ?", username).Find(&user)
-
-
-	err = bcrypt.CompareHashAndPassword([]byte(user.HashedPassword), []byte(password))
-
-	if err != nil {
+	if user.Authorise(username, password) {
+		json.NewEncoder(w).Encode(user)
+	} else {
 		m := make(map[string]string)
 		m["Message"] = "Username and password do not match"
 		json.NewEncoder(w).Encode(m)
-	} else {
-		json.NewEncoder(w).Encode(user)
-
 	}
-
 }

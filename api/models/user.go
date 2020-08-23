@@ -33,6 +33,23 @@ func InitialUserMigration() {
 	db.AutoMigrate(&User{})
 }
 
+func (user *User) Authorise(username, password string) bool {
+	db, err := gorm.Open("postgres", os.Getenv("DATABASE_URL"))
+
+	if err != nil {
+		fmt.Println(err.Error())
+		panic("Failed to connect to DataBase")
+	}
+
+	defer db.Close()
+
+	db.Where("Username = ?", username).Find(&user)
+
+	err = bcrypt.CompareHashAndPassword([]byte(user.HashedPassword), []byte(password))
+
+	return err == nil 
+}
+
 // GetAllUsers Queries the database and returns all users
 func (user *User) GetAllUsers() *[]User {
 	db, err := gorm.Open("postgres", os.Getenv("DATABASE_URL"))
