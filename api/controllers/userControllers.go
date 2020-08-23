@@ -45,33 +45,20 @@ func ShowUser(w http.ResponseWriter, r *http.Request) {
 }
 
 // NewUser will create a new user in the database and return a JSON response of that user
-func NewUser(w http.ResponseWriter, r *http.Request) {
+func Signup(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("New user endpoint hit")
-	
-	db, err := gorm.Open("postgres", os.Getenv("DATABASE_URL"))
-
-	if err != nil {
-		fmt.Println(err.Error())
-		panic("Failed to connect to DataBase")
-	}
-
-	defer db.Close()
 
 	username := r.FormValue("username")
 	email := r.FormValue("email")
 	password := r.FormValue("password")
 
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), 12)
+	user := &models.User{}
 
-	if err != nil {
-		panic(err)
-	}
-
-	user := db.Create(&models.User{Username: username, Email: email, HashedPassword: string(hashedPassword)})
+	newUser := user.Create(username, email, password)
 
 	fmt.Println("New user added to DataBase")
 
-	json.NewEncoder(w).Encode(user.Value)
+	json.NewEncoder(w).Encode(newUser)
 }
 
 // UpdateUser will find a user in the database and update their email address

@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 
+	"golang.org/x/crypto/bcrypt"
+
 	"github.com/jinzhu/gorm"
 	// This is required for using postgres with gorm
 	_ "github.com/jinzhu/gorm/dialects/postgres"
@@ -66,4 +68,25 @@ func (u *User) FindUserByID(id uint64) *User {
 	db.First(&user, id)
 
 	return &user
+}
+
+func (u *User) Create(username, email, password string) interface{} {
+	db, err := gorm.Open("postgres", os.Getenv("DATABASE_URL"))
+
+	if err != nil {
+		fmt.Println(err.Error())
+		panic("Failed to connect to DataBase")
+	}
+
+	defer db.Close()
+
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), 12)
+
+	if err != nil {
+		panic(err)
+	}
+ 
+	user := db.Create(&User{Username: username, Email: email, HashedPassword: string(hashedPassword)})
+
+	return user.Value
 }
