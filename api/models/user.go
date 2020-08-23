@@ -70,7 +70,7 @@ func (user *User) GetAllUsers() *[]User {
 }
 
 // FindUserByID will be given an id and will find the user based upon it
-func (u *User) FindUserByID(id uint64) *User {
+func (user *User) FindUserByID(id uint64) {
 	db, err := gorm.Open("postgres", os.Getenv("DATABASE_URL"))
 
 	if err != nil {
@@ -80,11 +80,7 @@ func (u *User) FindUserByID(id uint64) *User {
 
 	defer db.Close()
 
-	user := User{}
-
 	db.First(&user, id)
-
-	return &user
 }
 
 func (u *User) Create(username, email, password string) interface{} {

@@ -32,12 +32,11 @@ func ShowUser(w http.ResponseWriter, r *http.Request) {
 
 	id, _ := strconv.ParseUint(vars["id"], 10, 32)
 
-
 	var user models.User
 
-	foundUser := user.FindUserByID(id)
+	user.FindUserByID(id)
 
-	json.NewEncoder(w).Encode(foundUser)
+	json.NewEncoder(w).Encode(user)
 }
 
 // NewUser will create a new user in the database and return a JSON response of that user
