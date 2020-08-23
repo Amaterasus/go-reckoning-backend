@@ -96,28 +96,15 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 func DeleteUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Delete user endpoint hit")
 	
-	db, err := gorm.Open("postgres", os.Getenv("DATABASE_URL"))
-
-	if err != nil {
-		fmt.Println(err.Error())
-		panic("Failed to connect to DataBase")
-	}
-
-	defer db.Close()
-
 	vars := mux.Vars(r)
 
 	id := vars["id"]
 
 	var user models.User
 
-	db.Where("id = ?", id).Find(&user)
-	db.Delete(&user)
+	message := user.Destroy(id)
 
-	fmt.Println("User successfully deleted")
-	m := make(map[string]string)
-    m["Message"] = "User Deleted!"
-    json.NewEncoder(w).Encode(m)
+    json.NewEncoder(w).Encode(message)
 }
 
 // Login will varify the username and password and eventually should respond with a JWT for future verification

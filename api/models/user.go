@@ -90,3 +90,26 @@ func (u *User) Create(username, email, password string) interface{} {
 
 	return user.Value
 }
+
+
+func (user *User) Destroy(id string) map[string]string {
+
+	db, err := gorm.Open("postgres", os.Getenv("DATABASE_URL"))
+
+	if err != nil {
+		fmt.Println(err.Error())
+		panic("Failed to connect to DataBase")
+	}
+
+	defer db.Close()
+
+	db.Where("id = ?", id).Find(&user)
+	db.Delete(&user)
+
+	
+	fmt.Println("User successfully deleted")
+	m := make(map[string]string)
+    m["Message"] = "User Deleted!"
+	
+	return m
+}
