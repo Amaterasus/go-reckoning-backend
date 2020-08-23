@@ -65,31 +65,17 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Update user endpoint hit")
 
-	db, err := gorm.Open("postgres", os.Getenv("DATABASE_URL"))
-
-	if err != nil {
-		fmt.Println(err.Error())
-		panic("Failed to connect to DataBase")
-	}
-
-	defer db.Close()
-
 	vars := mux.Vars(r)
 
 	id := vars["id"]
 
 	email := r.FormValue("email")
 
-	var user models.User
-	db.Where("id = ?", id).Find(&user)
-	
-	user.Email = email
+	user := &models.User{}
 
-	db.Save(&user)
+	updatedUser := user.Update(id, email)
 
-	fmt.Println("User successfully updated")
-
-	json.NewEncoder(w).Encode(user)
+	json.NewEncoder(w).Encode(updatedUser)
 }
 
 // DeleteUser will find a user based on their ID and delete them from the database

@@ -91,6 +91,30 @@ func (u *User) Create(username, email, password string) interface{} {
 	return user.Value
 }
 
+func (u *User) Update(id, email string) *User {
+	db, err := gorm.Open("postgres", os.Getenv("DATABASE_URL"))
+
+	if err != nil {
+		fmt.Println(err.Error())
+		panic("Failed to connect to DataBase")
+	}
+
+	defer db.Close()
+
+	user := User{}
+
+	db.Where("id = ?", id).Find(&user)
+	
+	user.Email = email
+
+	db.Save(&user)
+
+	fmt.Println("User successfully updated")
+
+	return &user
+
+}
+
 
 func (user *User) Destroy(id string) map[string]string {
 
