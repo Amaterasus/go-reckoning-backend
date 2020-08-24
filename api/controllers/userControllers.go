@@ -9,8 +9,6 @@ import (
 	"github.com/Amaterasus/go-reckoning-backend/api/models"
 
 	"github.com/gorilla/mux"
-	// This is required for using postgres with gorm
-	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
 // AllUsers will return a JSON response of all users in the database
@@ -95,7 +93,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	username := r.FormValue("username")
 	password := r.FormValue("password")
 
-	var user models.User
+	user := models.User{}
 
 	if user.Authorise(username, password) {
 		json.NewEncoder(w).Encode(user)
