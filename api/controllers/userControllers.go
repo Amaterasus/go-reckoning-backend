@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"fmt"
-	"strconv"
 	"encoding/json"
 	"net/http"
 
@@ -28,7 +27,7 @@ func ShowUser(w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)
 
-	id, _ := strconv.ParseUint(vars["id"], 10, 32)
+	id, _ := vars["id"]
 
 	user := models.User{}
 
@@ -100,6 +99,22 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	} else {
 		m := make(map[string]string)
 		m["Message"] = "Username and password do not match"
+		json.NewEncoder(w).Encode(m)
+	}
+}
+
+func Authorise(w http.ResponseWriter, r *http.Request) {
+	token := r.Header["Authorised"]
+	if token != nil {
+		id := models.DecodeJWT(token[0])
+
+		user := models.User{}
+
+		user.FindUserByID(id)
+		json.NewEncoder(w).Encode(user)
+	} else {
+		m := make(map[string]string)
+		m["Error"] = "Not Authorised"
 		json.NewEncoder(w).Encode(m)
 	}
 }
