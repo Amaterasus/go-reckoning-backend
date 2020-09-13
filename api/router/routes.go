@@ -20,6 +20,7 @@ func HandleRequests(port string) {
 	myRouter.HandleFunc("/users/{id}", controllers.UpdateUser).Methods("PATCH")
 	myRouter.HandleFunc("/users/{id}", controllers.DeleteUser).Methods("DELETE")
 
+	myRouter.HandleFunc("/authorised", controllers.Authorised).Methods("GET")
 	myRouter.HandleFunc("/login", controllers.Login).Methods("POST")
 
 

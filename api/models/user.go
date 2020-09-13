@@ -82,6 +82,24 @@ func GenerateJWT(id string) (string, error) {
     return tokenString, nil
 }
 
+func DecodeJWT(token string) string {
+	
+	decodedToken, _ := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
+		_, ok := token.Method.(*jwt.SigningMethodHMAC); 
+		if !ok {
+			return nil, fmt.Errorf("There was an error")
+		}
+		secret := os.Getenv("SECRET")
+		return []byte(secret), nil
+	})
+	if claims, ok := decodedToken.Claims.(jwt.MapClaims); ok && decodedToken.Valid {
+		id := fmt.Sprintf("%v", claims["id"])
+		return id
+	} else {
+		return ""
+	}
+}
+
 // GetAllUsers Queries the database and returns all users
 func (user *User) GetAllUsers() *[]User {
 	db, err := gorm.Open("postgres", os.Getenv("DATABASE_URL"))
@@ -102,7 +120,7 @@ func (user *User) GetAllUsers() *[]User {
 }
 
 // FindUserByID will be given an id and will find the user based upon it
-func (user *User) FindUserByID(id uint64) {
+func (user *User) FindUserByID(id string) {
 	db, err := gorm.Open("postgres", os.Getenv("DATABASE_URL"))
 
 	if err != nil {
