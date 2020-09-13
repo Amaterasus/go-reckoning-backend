@@ -23,7 +23,9 @@ func HandleRequests(port string) {
 	myRouter.HandleFunc("/login", controllers.Login).Methods("POST")
 
 
-	cors := handlers.AllowedOrigins([]string{"https://reckoning.netlify.app", "*"})
+	corsOrigins := handlers.AllowedOrigins([]string{"https://reckoning.netlify.app", "*"})
+	corsHeaders := handlers.AllowedHeaders([]string{"Authorised"})
 	
-	log.Fatal(http.ListenAndServe(":" + port, handlers.CORS(cors)(myRouter)))
+	
+	log.Fatal(http.ListenAndServe(":" + port, handlers.CORS(corsOrigins, corsHeaders)(myRouter)))
 }
