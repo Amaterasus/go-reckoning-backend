@@ -103,7 +103,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func Authorise(w http.ResponseWriter, r *http.Request) {
+func Authorised(w http.ResponseWriter, r *http.Request) {
 	token := r.Header["Authorised"]
 	if token != nil {
 		id := models.DecodeJWT(token[0])
