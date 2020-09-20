@@ -28,4 +28,5 @@ func main() {
 
 func initialMigrations() {
 	models.InitialUserMigration()
+	models.InitialFriendsMigration()
 }

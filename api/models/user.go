@@ -19,7 +19,7 @@ type User struct {
 	ID string `gorm:"primaryKey;type:uuid"`
 	gorm.Model
 	Username string `json:"username"`
-	Email string `json:"email"`
+	Email string `json:"-"`
 	HashedPassword string `json:"-"`
 	Jwt string `gorm:"-"`
 	CreatedAt time.Time
@@ -113,7 +113,6 @@ func (user *User) GetAllUsers() *[]User {
 
 	users := []User{}
 
-
 	db.Find(&users)
 
 	return &users
@@ -180,8 +179,6 @@ func (u *User) Update(id, email string) {
 	db.Save(&user)
 
 	fmt.Println("User successfully updated")
-
-
 }
 
 
@@ -205,4 +202,12 @@ func (user *User) Destroy(id string) map[string]string {
     m["Message"] = "User Deleted!"
 	
 	return m
+}
+
+func (user *User) SendFriendRequest() {
+	
+}
+
+func (user *User) PendingFriendRequests() {
+	
 }
